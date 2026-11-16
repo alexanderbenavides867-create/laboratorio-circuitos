@@ -60,7 +60,7 @@ Componentes: ESP32 DevKit V1, 5 LED, 5 resistencias de 220 Ω, 1 pulsador, 1 res
 | E1 | Parpadeo | Todos encienden y apagan a la vez | 500 | E2 | E1 |
 | E2 | Carrera | Un LED a la vez, de izquierda a derecha | 150 | E3 | E2 |
 | E3 | Alternado | Pares e impares se turnan | 300 | E4 | E3 |
-| E4 | Vaivén (coche fantástico) | Barrido de ida y vuelta (LED 1 → 5 → 1) | 80 | E0 | E4 |
+| E4 | Vaivén| Barrido de ida y vuelta (LED 1 → 5 → 1) | 80 | E0 | E4 |
 
 ### Características del firmware
 
