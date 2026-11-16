@@ -46,51 +46,11 @@ Componentes: ESP32 DevKit V1, 5 LED, 5 resistencias de 220 Ω, 1 pulsador, 1 res
 | LED 1 a LED 5 | GPIO 18, 19, 21, 22 y 23 | Cada LED en serie con una resistencia de 220 Ω hacia GND |
 | Pulsador | GPIO 4 | Un terminal a 3V3; el otro al GPIO 4 y, mediante la resistencia de 10 kΩ, a GND (pull-down externa) |
 
-Precauciones:
-
-* El pulsador se conecta a **3V3, no a VIN**. Los pines de la ESP32 no toleran 5 V.
-* El GPIO 4 se configura como `INPUT`, sin resistencias internas, porque la pull-down es externa.
-* Se requiere un cable USB de **datos**, no solo de carga.
-
 ---
 
-## Cómo cargar los programas
-
-1. Instalar el [Arduino IDE](https://www.arduino.cc/en/software).
-2. Instalar el soporte de la ESP32: en *Archivo → Preferencias* agregar la URL del gestor de tarjetas de Espressif y, en *Herramientas → Placa → Gestor de tarjetas*, instalar **esp32 by Espressif Systems**.
-3. Seleccionar la placa **ESP32 Dev Module** (compatible con la DevKit V1) y el puerto COM correspondiente.
-4. Abrir el `.ino` deseado desde su carpeta y presionar *Subir*. Si la carga no inicia, mantener presionado el botón **BOOT** de la placa mientras comienza.
-5. Abrir el monitor serie a **115200 baudios**.
-6. Para reiniciar un programa (por ejemplo, poner el contador en 0), presionar el botón **EN** de la placa.
-
----
 
 ## Programa principal: máquina de estados de Moore
 
-### Diagrama de estados
-
-El estado inicial es E0. Cada flanco ascendente (0 → 1) del pulsador, aceptado por el antirrebote, avanza un estado; sin flanco, el sistema permanece en el estado actual.
-
-```mermaid
-stateDiagram-v2
-    direction LR
-    [*] --> E0
-    E0: E0 Apagadas
-    E1: E1 Parpadeo
-    E2: E2 Carrera
-    E3: E3 Alternado
-    E4: E4 Vaivén
-    E0 --> E1: flanco ↑
-    E1 --> E2: flanco ↑
-    E2 --> E3: flanco ↑
-    E3 --> E4: flanco ↑
-    E4 --> E0: flanco ↑
-    E0 --> E0: sin flanco
-    E1 --> E1: sin flanco
-    E2 --> E2: sin flanco
-    E3 --> E3: sin flanco
-    E4 --> E4: sin flanco
-```
 
 ### Tabla de transiciones y salidas
 
