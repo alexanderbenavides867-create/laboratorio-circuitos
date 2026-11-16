@@ -49,7 +49,7 @@ El repositorio está organizado con los códigos fuente correspondientes a las d
 ---
 
 ## Autores
-Facultad de Ingeniería — Programa de Ingeniería Multimedia / Sistemas, Universidad de San Buenaventura, sede Bogotá:
+Facultad de Ingeniería — Programa de Ingeniería Multimedia, Universidad de San Buenaventura, sede Bogotá:
 * Jimena Bedoya Huertas
 * María Paula Erazo Criollo
 * Yesid Santiago Quintero Gómez
