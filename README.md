@@ -1,4 +1,4 @@
-# Laboratorio de Circuitos Digitales: Luces de Navidad con ESP32
+# Laboratorio de Circuitos Digitales
 
 Repositorio de la práctica de laboratorio de Circuitos Digitales, Universidad de San Buenaventura, sede Bogotá.
 
