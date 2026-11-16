@@ -13,14 +13,15 @@ El repositorio está organizado con los códigos fuente correspondientes a las d
 
 ```text
 ├── proyecto_principal/
-│   └── fsm_luces_navidad.ino         # Código principal de la FSM (5 estados con millis() y antirrebote)
+│   └── proyecto_principal.ino        # Código principal de la FSM (5 estados con millis() y antirrebote)
 ├── version_1/
-│   └── version1_delay.ino            # Versión experimental con delay() (Bloqueante)
+│   └── version_1.ino                 # Versión experimental con delay() (Bloqueante)
 ├── version_2/
-│   └── version2_millis_antirrebote.ino # Versión experimental con millis() y filtro de 50 ms (100% lecturas)
+│   └── version_2.ino                 # Versión experimental con millis() y filtro de 50 ms (100% lecturas)
 ├── version_3/
-│   └── version3_millis_sin_filtro.ino  # Versión experimental con millis() sin filtro (Registro de rebotes)
+│   └── version_3.ino                 # Versión experimental con millis() sin filtro (Registro de rebotes)
 └── README.md                         # Documentación técnica del repositorio
+
 ```
 
 ---
