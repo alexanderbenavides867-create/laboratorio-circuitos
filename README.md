@@ -1,59 +1,169 @@
-# Laboratorio de Circuitos Digitales: Control de Entradas Digitales y Máquina de Estados en ESP32
+# Laboratorio de Circuitos Digitales: Luces de Navidad con ESP32
 
-Repositorio oficial para la práctica de laboratorio de Circuitos Digitales de la Universidad de San Buenaventura, sede Bogotá.
+Repositorio de la práctica de laboratorio de Circuitos Digitales, Universidad de San Buenaventura, sede Bogotá.
 
-## Descripción del Proyecto
-Este proyecto implementa y evalúa un sistema embebido utilizando la tarjeta de desarrollo **ESP32 DevKit V1**. La práctica comprende la caracterización de entradas digitales con resistencias de pull-down externas, la comparación de consumo y caídas de voltaje frente a microcontroladores de 5 V (como Arduino UNO), el análisis del impacto de funciones bloqueantes (`delay()`) frente a temporización no bloqueante con `millis()` y antirrebote, y finalmente el desarrollo de un sistema organizado mediante una **Máquina de Estados Finitos (FSM) de Moore** con cinco estados.
+## Descripción del proyecto
+
+Este proyecto implementa y evalúa un sistema embebido con la tarjeta **ESP32 DevKit V1**. La práctica comprende:
+
+* La caracterización de una entrada digital con resistencia **pull-down** externa (Experimento A).
+* La comparación de la corriente en un LED entre la ESP32 (3.3 V) y el Arduino UNO (5 V) (Experimento B).
+* El efecto de `delay()` frente a `millis()` y al antirrebote en la detección de un pulsador (Experimento C).
+* Un juego de luces de navidad organizado como una **máquina de estados finitos (FSM) de Moore** de cinco estados, sin `delay()`.
+
+Pregunta orientadora: ¿cómo se organiza un programa que debe atender un botón en todo momento mientras ejecuta secuencias de luces temporizadas, y qué diferencias entre la ESP32 y el Arduino UNO hay que tener en cuenta al pasar de una placa a la otra?
 
 ---
 
-## Estructura del Repositorio
+## Estructura del repositorio
 
-El repositorio está organizado con los códigos fuente correspondientes a las diferentes etapas de experimentación y al proyecto integrador:
+Cada programa está en una carpeta con el mismo nombre del archivo `.ino`, como exige el Arduino IDE.
 
 ```text
-├── proyecto_principal/
-│   └── proyecto_principal.ino        # Código principal de la FSM (5 estados con millis() y antirrebote)
-├── version_1/
-│   └── version_1.ino                 # Versión experimental con delay() (Bloqueante)
-├── version_2/
-│   └── version_2.ino                 # Versión experimental con millis() y filtro de 50 ms (100% lecturas)
-├── version_3/
-│   └── version_3.ino                 # Versión experimental con millis() sin filtro (Registro de rebotes)
-└── README.md                         # Documentación técnica del repositorio
-
+├── Luces_Navidad/
+│   └── Luces_Navidad.ino                        # FSM de Moore, 5 estados (millis() + antirrebote)
+├── Experimento_A_PullDown/
+│   └── Experimento_A_PullDown.ino               # 20 lecturas del GPIO 4
+├── Experimento_B_Corriente_LED/
+│   └── Experimento_B_Corriente_LED.ino          # LED encendido fijo para medir corriente
+├── Experimento_C_V1_Delay/
+│   └── Experimento_C_V1_Delay.ino               # delay() sin antirrebote
+├── Experimento_C_V2_Millis_Antirrebote/
+│   └── Experimento_C_V2_Millis_Antirrebote.ino  # millis() con antirrebote de 50 ms
+├── Experimento_C_V3_Millis_SinAntirrebote/
+│   └── Experimento_C_V3_Millis_SinAntirrebote.ino  # millis() sin antirrebote
+└── README.md
 ```
 
 ---
 
-## Descripción de los Programas
+## Montaje
 
-1. **`proyecto_principal.ino`**:
-   Implementa la máquina de estados finitos de Moore de cinco estados ($E_0$ a $E_4$):
-   * **$E_0$ (Apagadas):** Todos los LEDs apagados.
-   * **$E_1$ (Parpadeo):** Todos los LEDs conmutan simultáneamente cada 500 ms.
-   * **$E_2$ (Carrera):** Secuencia de encendido secuencial de izquierda a derecha cada 150 ms.
-   * **$E_3$ (Alternado):** Conmutación entre LEDs pares e impares cada 300 ms.
-   * **$E_4$ (Vaivén):** Barrido dinámico de ida y vuelta cada 80 ms.
-   * *Características:* No bloqueante mediante `millis()`, control por flanco ascendente del pulsador en el GPIO 4 y antirrebote de 50 ms.
+Componentes: ESP32 DevKit V1, 5 LED, 5 resistencias de 220 Ω, 1 pulsador, 1 resistencia de 10 kΩ y cable USB de datos.
 
-2. **`version_1.ino`**:
-   Programa del Experimento C (Versión 1) que utiliza `delay(250)` para el parpadeo del LED. Demuestra cómo la CPU se bloquea durante los retardos, provocando la pérdida de pulsaciones del botón (rendimiento aproximado del 35%).
+| Elemento | Pin ESP32 | Conexión |
+|---|---|---|
+| LED 1 a LED 5 | GPIO 18, 19, 21, 22 y 23 | Cada LED en serie con una resistencia de 220 Ω hacia GND |
+| Pulsador | GPIO 4 | Un terminal a 3V3; el otro al GPIO 4 y, mediante la resistencia de 10 kΩ, a GND (pull-down externa) |
 
-3. **`version_2.ino`**:
-   Programa del Experimento C (Versión 2) que utiliza temporización no bloqueante con `millis()` combinada con un filtro de antirrebote de 50 ms, logrando una detección exitosa del 100% de las pulsaciones.
+Precauciones:
 
-4. **`version_3.ino`**:
-   Programa del Experimento C (Versión 3) que utiliza `millis()` para el parpadeo pero sin filtro de antirrebote, registrando el ruido mecánico de los contactos y superando el 180% de conteo debido a los múltiples flancos falsos.
+* El pulsador se conecta a **3V3, no a VIN**. Los pines de la ESP32 no toleran 5 V.
+* El GPIO 4 se configura como `INPUT`, sin resistencias internas, porque la pull-down es externa.
+* Se requiere un cable USB de **datos**, no solo de carga.
+
+---
+
+## Cómo cargar los programas
+
+1. Instalar el [Arduino IDE](https://www.arduino.cc/en/software).
+2. Instalar el soporte de la ESP32: en *Archivo → Preferencias* agregar la URL del gestor de tarjetas de Espressif y, en *Herramientas → Placa → Gestor de tarjetas*, instalar **esp32 by Espressif Systems**.
+3. Seleccionar la placa **ESP32 Dev Module** (compatible con la DevKit V1) y el puerto COM correspondiente.
+4. Abrir el `.ino` deseado desde su carpeta y presionar *Subir*. Si la carga no inicia, mantener presionado el botón **BOOT** de la placa mientras comienza.
+5. Abrir el monitor serie a **115200 baudios**.
+6. Para reiniciar un programa (por ejemplo, poner el contador en 0), presionar el botón **EN** de la placa.
+
+---
+
+## Programa principal: máquina de estados de Moore
+
+### Diagrama de estados
+
+El estado inicial es E0. Cada flanco ascendente (0 → 1) del pulsador, aceptado por el antirrebote, avanza un estado; sin flanco, el sistema permanece en el estado actual.
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> E0
+    E0: E0 Apagadas
+    E1: E1 Parpadeo
+    E2: E2 Carrera
+    E3: E3 Alternado
+    E4: E4 Vaivén
+    E0 --> E1: flanco ↑
+    E1 --> E2: flanco ↑
+    E2 --> E3: flanco ↑
+    E3 --> E4: flanco ↑
+    E4 --> E0: flanco ↑
+    E0 --> E0: sin flanco
+    E1 --> E1: sin flanco
+    E2 --> E2: sin flanco
+    E3 --> E3: sin flanco
+    E4 --> E4: sin flanco
+```
+
+### Tabla de transiciones y salidas
+
+| Estado actual | Nombre | Salidas (LED) | Período (ms) | Con flanco ↑ | Sin flanco |
+|---|---|---|---|---|---|
+| E0 (inicial) | Apagadas | Todos apagados | — | E1 | E0 |
+| E1 | Parpadeo | Todos encienden y apagan a la vez | 500 | E2 | E1 |
+| E2 | Carrera | Un LED a la vez, de izquierda a derecha | 150 | E3 | E2 |
+| E3 | Alternado | Pares e impares se turnan | 300 | E4 | E3 |
+| E4 | Vaivén (coche fantástico) | Barrido de ida y vuelta (LED 1 → 5 → 1) | 80 | E0 | E4 |
+
+### Características del firmware
+
+* Estado actual en una variable `enum` y comportamiento de cada estado dentro de un `switch`.
+* Sin `delay()`: todos los tiempos se controlan con `millis()`, y cada patrón recuerda su paso en la variable `paso`.
+* Cambio de estado solo en el **flanco ascendente** del pulsador, no mientras permanece presionado.
+* Antirrebote con `millis()`: se ignoran las pulsaciones que llegan menos de 50 ms después de la última aceptada.
+* Al cambiar de estado, el nuevo patrón empieza desde su primer paso.
+* Cada cambio de estado se imprime en el monitor serie con el nombre del nuevo estado.
+
+---
+
+## Programas de los experimentos
+
+| Archivo | Experimento | Descripción |
+|---|---|---|
+| `Experimento_A_PullDown.ino` | A | Hace 20 lecturas de `digitalRead()` en el GPIO 4, separadas 100 ms, y muestra cuántas valieron 1. Se mide el voltaje del pin con el multímetro. |
+| `Experimento_B_Corriente_LED.ino` | B | Mantiene encendido un LED con su resistencia de 220 Ω para medir Vpin y VR. Para el Arduino UNO se usa el mismo programa cambiando `PIN_LED` a un pin digital. |
+| `Experimento_C_V1_Delay.ino` | C, V1 | Parpadeo de 500 ms con `delay(250)` + `delay(250)` y sin antirrebote. Cuenta las pulsaciones detectadas. |
+| `Experimento_C_V2_Millis_Antirrebote.ino` | C, V2 | Parpadeo de 500 ms con `millis()` y antirrebote de 50 ms. |
+| `Experimento_C_V3_Millis_SinAntirrebote.ino` | C, V3 | Parpadeo de 500 ms con `millis()` y sin antirrebote. |
+
+---
+
+## Resultados principales
+
+**Experimento A: entrada pull-down (GPIO 4, 20 lecturas)**
+
+| Resistencia de 10 kΩ | Botón | Voltaje en GPIO 4 (V) | Lecturas en 1 (de 20) |
+|---|---|---|---|
+| Conectada | Suelto | 0.000 | 0 |
+| Conectada | Presionado | 3.261 | 20 |
+
+**Experimento B: corriente en el LED (R = 220 Ω, VF = 2.0 V)**
+
+| Placa | Imedida (mA) | Iteórica (mA) | Error (%) |
+|---|---|---|---|
+| ESP32 | 5.24 | 5.91 | 11.3 |
+| Arduino UNO | 11.52 | 13.64 | 15.5 |
+
+**Experimento C: pulsaciones detectadas (3 intentos de 20 pulsaciones)**
+
+| Versión | Intento 1 | Intento 2 | Intento 3 | Promedio | Detectado (%) |
+|---|---|---|---|---|---|
+| V1 (`delay()`) | 7 | 6 | 8 | 7.0 | 35.0 |
+| V2 (`millis()` + antirrebote) | 20 | 20 | 20 | 20.0 | 100.0 |
+| V3 (`millis()` sin antirrebote) | 36 | 34 | 39 | 36.3 | 181.7 |
+
+Un porcentaje mayor que 100 indica que el programa contó pulsaciones que no ocurrieron (rebotes mecánicos).
 
 ---
 
 ## Autores
-Facultad de Ingeniería — Programa de Ingeniería Multimedia, Universidad de San Buenaventura, sede Bogotá:
+
+Facultad de Ingeniería, Programa de Ingeniería Multimedia, Universidad de San Buenaventura, sede Bogotá:
+
 * Jimena Bedoya Huertas
 * María Paula Erazo Criollo
 * Yesid Santiago Quintero Gómez
 * Daniel Alexander Benavides Silva
+
+**Docente:** Ing. Sergio Alberto Reyes Gómez
+**Asignatura:** Circuitos Digitales
 
 **Docente:** Ing. Sergio Alberto Reyes Gómez  
 **Asignatura:** Circuitos Digitales
