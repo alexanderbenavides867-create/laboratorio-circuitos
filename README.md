@@ -27,7 +27,7 @@ El repositorio está organizado con los códigos fuente correspondientes a las d
 
 ## Descripción de los Programas
 
-1. **`proyecto_principal/fsm_luces_navidad.ino`**:
+1. **`proyecto_principal.ino`**:
    Implementa la máquina de estados finitos de Moore de cinco estados ($E_0$ a $E_4$):
    * **$E_0$ (Apagadas):** Todos los LEDs apagados.
    * **$E_1$ (Parpadeo):** Todos los LEDs conmutan simultáneamente cada 500 ms.
@@ -36,29 +36,14 @@ El repositorio está organizado con los códigos fuente correspondientes a las d
    * **$E_4$ (Vaivén):** Barrido dinámico de ida y vuelta cada 80 ms.
    * *Características:* No bloqueante mediante `millis()`, control por flanco ascendente del pulsador en el GPIO 4 y antirrebote de 50 ms.
 
-2. **`version_1/version1_delay.ino`**:
+2. **`version_1.ino`**:
    Programa del Experimento C (Versión 1) que utiliza `delay(250)` para el parpadeo del LED. Demuestra cómo la CPU se bloquea durante los retardos, provocando la pérdida de pulsaciones del botón (rendimiento aproximado del 35%).
 
-3. **`version_2/version2_millis_antirrebote.ino`**:
+3. **`version_2.ino`**:
    Programa del Experimento C (Versión 2) que utiliza temporización no bloqueante con `millis()` combinada con un filtro de antirrebote de 50 ms, logrando una detección exitosa del 100% de las pulsaciones.
 
-4. **`version_3/version3_millis_sin_filtro.ino`**:
+4. **`version_3.ino`**:
    Programa del Experimento C (Versión 3) que utiliza `millis()` para el parpadeo pero sin filtro de antirrebote, registrando el ruido mecánico de los contactos y superando el 180% de conteo debido a los múltiples flancos falsos.
-
----
-
-## Instrucciones de Uso y Carga
-
-1. **Requisitos previos:**
-   * Tener instalado [Arduino IDE](https://www.arduino.cc/en/software).
-   * Agregar el paquete de placas ESP32 de Espressif Systems en el gestor de placas del IDE.
-   * Seleccionar la placa **ESP32 DevKit V1** y el puerto COM correspondiente.
-
-2. **Carga de programas:**
-   * Navegue a la carpeta de su preferencia (`proyecto_principal`, `version_1`, `version_2` o `version_3`).
-   * Abra el archivo `.ino` correspondiente.
-   * Conecte la ESP32 (si la carga no inicia automáticamente, mantenga presionado el botón **BOOT** de la placa mientras comienza la compilación).
-   * Abra el **Monitor Serie** configurado a **115200 baudios** para visualizar las telemetrías y el conteo de pulsaciones.
 
 ---
 
