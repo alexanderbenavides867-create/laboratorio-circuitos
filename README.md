@@ -1,4 +1,5 @@
-# Laboratorio: Luces de Navidad con ESP32
+# Laboratorio
+
 
 Repositorio para la práctica de Circuitos Digitales de la Universidad de San Buenaventura.
 
